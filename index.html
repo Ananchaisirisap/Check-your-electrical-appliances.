@@ -1,0 +1,218 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101d35">
+  <meta name="description" content="Electricity Buddy ช่วยคำนวณค่าไฟ วิเคราะห์การใช้พลังงาน และแนะนำวิธีประหยัดไฟ">
+  <title>Electricity Buddy | คำนวณค่าไฟฟ้า</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="logo">⚡</div>
+    <div>
+      <h1>Electricity Buddy</h1>
+      <p>SMART ENERGY CALCULATOR</p>
+    </div>
+  </header>
+
+  <main>
+    <section class="welcome">
+      <h2>คำนวณค่าไฟฟ้าของคุณ</h2>
+      <p>รู้ทันการใช้พลังงาน ช่วยวางแผนค่าใช้จ่ายในบ้าน</p>
+    </section>
+
+    <!-- สรุปพลังงานและค่าไฟ -->
+    <section class="summary-cards">
+      <div class="summary-card energy-card">
+        <div class="summary-icon">⚡</div>
+        <p>พลังงานที่ใช้ต่อเดือน</p>
+        <div class="summary-value">
+          <span id="summary-units">0.00</span>
+          <small>kWh</small>
+        </div>
+      </div>
+
+      <div class="summary-card cost-card">
+        <div class="summary-icon">฿</div>
+        <p>ค่าไฟโดยประมาณ</p>
+        <div class="summary-value">
+          <span id="summary-cost">0.00</span>
+          <small>บาท</small>
+        </div>
+      </div>
+    </section>
+
+    <!-- กราฟวิเคราะห์ค่าไฟ -->
+    <section class="chart-section">
+      <h2>วิเคราะห์การใช้ไฟฟ้า</h2>
+      <p class="chart-description">
+        เปรียบเทียบการใช้พลังงานและค่าไฟของเครื่องใช้ไฟฟ้า
+      </p>
+      <div class="chart-card">
+        <div id="electricity-chart">
+          <p>เพิ่มเครื่องใช้ไฟฟ้าเพื่อดูกราฟ</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- เครื่องคำนวณค่าไฟ -->
+    <section class="calculator">
+      <h2>คำนวณค่าไฟรายเครื่อง</h2>
+      <p>กรอกข้อมูลการใช้งานเพื่อประเมินค่าไฟ</p>
+
+      <label for="appliance">ชื่อเครื่องใช้ไฟฟ้า</label>
+      <input
+        type="text"
+        id="appliance"
+        list="appliance-options"
+        placeholder="เลือกหรือพิมพ์ชื่อเครื่องใช้ไฟฟ้า"
+        autocomplete="off"
+      >
+
+      <datalist id="appliance-options">
+        <option value="พัดลม"></option>
+        <option value="โทรทัศน์"></option>
+        <option value="ตู้เย็น"></option>
+        <option value="เครื่องปรับอากาศ"></option>
+        <option value="คอมพิวเตอร์ตั้งโต๊ะ"></option>
+        <option value="แอร์ 9000 BTU"></option>
+        <option value="แอร์ 12000 BTU"></option>
+        <option value="แอร์ 18000 BTU"></option>
+        <option value="หลอดไฟ LED"></option>
+        <option value="หม้อหุงข้าว"></option>
+        <option value="ไมโครเวฟ"></option>
+        <option value="เครื่องซักผ้า"></option>
+        <option value="เตารีด"></option>
+        <option value="เครื่องทำน้ำอุ่น"></option>
+      </datalist>
+
+      <label for="watt">กำลังไฟฟ้า (วัตต์)</label>
+      <input type="number" id="watt" placeholder="เช่น 100" min="1" step="any">
+
+      <label for="hours">ชั่วโมงที่ใช้ต่อวัน</label>
+      <input type="number" id="hours" placeholder="เช่น 5" min="0.01" max="24" step="any">
+
+      <label for="days">จำนวนวันที่ใช้ต่อเดือน</label>
+      <input type="number" id="days" placeholder="เช่น 30" min="1" max="31" step="1">
+
+      <label for="rate">ค่าไฟต่อหน่วย (บาท)</label>
+      <input type="number" id="rate" value="4.50" min="0" step="0.01">
+
+      <button id="calculate" type="button">
+        + เพิ่มเครื่องใช้ไฟฟ้าในรายการ
+      </button>
+
+      <div id="result" aria-live="polite">
+        <p>ผลการคำนวณจะแสดงตรงนี้</p>
+      </div>
+
+      <h3>รายการเครื่องใช้ไฟฟ้า</h3>
+      <div id="appliance-list">
+        <p>ยังไม่มีเครื่องใช้ไฟฟ้าในรายการ</p>
+      </div>
+
+      <button id="add-appliance" type="button">
+        คำนวณค่าไฟรวมทั้งหมด
+      </button>
+
+      <div id="total-bill" aria-live="polite">
+        ค่าไฟรวมทั้งบ้าน: 0.00 บาท/เดือน
+      </div>
+    </section>
+
+    <!-- ประมาณการบิลค่าไฟ -->
+    <section class="bill-estimate" id="bill-estimate">
+      <h2>ประมาณการบิลค่าไฟ</h2>
+      <p>ประเมินค่าไฟจากจำนวนหน่วยที่ใช้ทั้งบ้าน</p>
+
+      <div class="bill-input">
+        <label for="monthly-units">หน่วยไฟฟ้าทั้งบ้าน (kWh)</label>
+        <input type="number" id="monthly-units" min="0" step="0.01" placeholder="เช่น 350">
+        <p>ดูจำนวนหน่วยได้จากบิลค่าไฟของบ้าน</p>
+      </div>
+
+      <div class="bill-input">
+        <label for="ft-rate">อัตรา Ft (บาท/หน่วย)</label>
+        <input type="number" id="ft-rate" min="0" step="0.0001" value="0.1623">
+      </div>
+
+      <div class="bill-input">
+        <label for="service-charge">ค่าบริการรายเดือน (บาท)</label>
+        <input type="number" id="service-charge" min="0" step="0.01" value="24.62">
+      </div>
+
+      <div class="bill-row">
+        <span>หน่วยไฟที่ประเมิน</span>
+        <strong id="bill-units">0.00 หน่วย</strong>
+      </div>
+      <div class="bill-row">
+        <span>ค่าไฟฟ้าฐาน</span>
+        <strong id="bill-base">0.00 บาท</strong>
+      </div>
+      <div class="bill-row">
+        <span>ค่า Ft</span>
+        <strong id="bill-ft">0.00 บาท</strong>
+      </div>
+      <div class="bill-row">
+        <span>ค่าบริการรายเดือน</span>
+        <strong id="bill-service">0.00 บาท</strong>
+      </div>
+      <div class="bill-row">
+        <span>ค่าไฟก่อนภาษี</span>
+        <strong id="bill-before-vat">0.00 บาท</strong>
+      </div>
+      <div class="bill-row">
+        <span>ภาษีมูลค่าเพิ่ม (VAT)</span>
+        <strong id="bill-vat">0.00 บาท</strong>
+      </div>
+      <div class="bill-row bill-total">
+        <span>ยอดรวมประมาณการ</span>
+        <strong id="bill-total">0.00 บาท</strong>
+      </div>
+
+      <p class="bill-note">
+        ผลลัพธ์เป็นเพียงการประมาณการ อัตราค่าไฟฐาน ค่า Ft
+        และค่าบริการอาจแตกต่างตามประเภทผู้ใช้ไฟฟ้าและงวดบิล
+      </p>
+    </section>
+
+    <!-- ประวัติการคำนวณ -->
+    <section class="history">
+      <h2>ประวัติการคำนวณ</h2>
+      <p class="history-description">
+        รายการผลการคำนวณค่าไฟที่บันทึกไว้
+      </p>
+      <div id="history-list">
+        <p>ยังไม่มีประวัติการคำนวณ</p>
+      </div>
+      <button id="clear-history" class="clear-button" type="button">
+        ล้างประวัติทั้งหมด
+      </button>
+    </section>
+
+    <!-- คำแนะนำประหยัดไฟ -->
+    <section id="saving-tips-section" class="chart-section">
+      <h2>💡 คำแนะนำการประหยัดค่าไฟ</h2>
+      <p class="chart-description">
+        คำแนะนำตามเครื่องใช้ไฟฟ้าที่คุณเพิ่มในรายการ
+      </p>
+      <div class="chart-card">
+        <div id="saving-tips" aria-live="polite">
+          <p>กำลังโหลดคำแนะนำ...</p>
+        </div>
+      </div>
+    </section>
+
+    <p class="chart-description">
+      หมายเหตุ: ผลลัพธ์เป็นค่าประมาณจากข้อมูลที่กรอก
+      ค่าไฟจริงอาจแตกต่างตามอัตราค่าไฟและลักษณะการใช้งาน
+    </p>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
